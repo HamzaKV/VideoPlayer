@@ -1,0 +1,349 @@
+#hv-media-player {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    min-width: 300px;
+}
+
+#hv-media-video-header {
+    background: rgba(255, 255, 255, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+#hv-media-video-title {
+    color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#hv-media-video {
+    width: 100%;
+    height: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+#hv-media-onscreen {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 80px;
+    max-height: 80px;
+    min-width: 40px;
+    min-height: 40px;
+    margin-left: -40px;
+    margin-top: -40px;
+    width: 10%;
+    height: 15%;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* opacity: 0; */
+    z-index: 25;
+}
+
+#hv-media-controls {
+    z-index: 2;
+    width: 98%;
+    height: fit-content;
+    position: absolute;
+    bottom: 0px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    /* display: none; */
+}
+
+#hv-media-progress-controls {
+    width: 100%;
+    height: 5px;
+    background-color: #757575;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+#hv-media-progress-buffer {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    background-color: transparent;
+    border: none;
+}
+
+#hv-media-progress-buffer::-webkit-progress-bar {
+    background-color: transparent;
+    border: none;
+}
+
+#hv-media-progress-buffer::-webkit-progress-value {
+    background: lightgray;
+    border: none;
+}
+
+#hv-media-progress-buffer::-moz-progress-bar {
+    border: none;
+    background: lightgray;
+}
+
+#hv-media-progress-bar {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 2px;
+    width: 100%;
+    height: 5px;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    background-color: transparent;
+    border: none;
+}
+
+#hv-media-progress-bar::-webkit-progress-bar {
+    background-color: transparent;
+    border: none;
+}
+
+#hv-media-progress-bar::-webkit-progress-value {
+    background: blue;
+    border: none;
+}
+
+#hv-media-progress-bar::-moz-progress-bar {
+    border: none;
+    background: blue;
+}
+
+#hv-media-progress-slider {
+    width: 100%;
+    height: 5px;
+    position: absolute;
+    z-index: 5;
+    top: 0px;
+    cursor: pointer;
+    margin: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    outline: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s, visibility 1s linear;
+}
+
+#hv-media-progress-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+    background: #0007c9;
+}
+  
+#hv-media-progress-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #0007c9;
+}
+
+#hv-media-progress-controls:hover > #hv-media-progress-slider, 
+#hv-media-progress-slider:active {
+    visibility: visible;
+    opacity: 1;
+}
+
+#hv-media-progress-slider:hover + #hv-media-seek-tooltip {
+    display: block;
+}
+
+#hv-media-seek-tooltip {
+    display: none;
+    position: absolute;
+    top: -50px;
+    margin-left: -20px;
+    font-size: 12px;
+    padding: 3px;
+    content: attr(data-title);
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+#hv-media-controls-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#hv-media-controls-left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+#hv-media-controls-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#hv-media-control-playpause-button,
+#hv-media-control-mute-button,
+#hv-media-control-pip-button,
+#hv-media-control-settings-button,
+#hv-media-control-full-button {
+    cursor: pointer;
+    position: relative;
+    margin-right: 7px;
+    font-size: 12px;
+    padding: 3px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+#hv-media-time-passed-text {
+    font-weight: bolder;
+}
+
+#hv-media-svg {
+    max-width: 28px;
+    max-height: 28px;
+    min-width: 20px;
+    min-height: 20px;
+    width: 10%;
+    height: 10%;
+    fill: #fff;
+    stroke: #fff;
+    cursor: pointer;
+}
+
+#hv-media-control-volume-slider-container {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.4, opacity 0.4 linear;
+    position: absolute;
+    bottom: 30px;
+    padding: 5px 10px 5px;
+    background: transparent;
+    z-index: 10;
+}
+
+#hv-media-control-volume-slider {
+    width: 5px;
+    height: 100px;
+    cursor: pointer;
+    -webkit-appearance: slider-vertical;
+    -moz-appearance: none;
+    background-color: white;
+    outline: none;
+    border-radius: 50px;
+}
+
+#hv-media-control-mute-button:hover + #hv-media-control-volume-slider-container, 
+#hv-media-control-volume-slider-container:hover {
+    visibility: visible;
+    opacity: 1;
+}
+
+#hv-media-control-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: slider-vertical;
+    background-color: blue;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+}
+
+#hv-media-control-volume-slider::-moz-range-thumb {
+    background-color: blue;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%; 
+}
+
+#hv-media-controls-settings-menu {
+    width: 20%;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: 20;
+    bottom: 40px;
+}
+
+#hv-media-controls-settings-menu-option {
+    color: white;
+    padding: 5px;
+}
+
+#hv-media-controls-settings-menu-playback,
+#hv-media-controls-settings-menu-subtitles,
+#hv-media-controls-settings-menu-quality,
+#hv-media-controls-settings-menu-options {
+    list-style: none;
+    padding: 2px;
+}
+
+#hv-media-controls-settings-menu-option:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+}
+
+#hv-media-context-menu-container {
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 25;
+    display: none;
+}
+
+#hv-media-context-menu {
+    list-style: none;
+    padding: 2px;
+}
+
+#hv-media-context-menu-option {
+    color: white;
+    padding: 5px;
+}
+
+#hv-media-context-menu-option:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+}
+
+@media screen and (min-width: 724px) {
+    #hv-media-controls-settings-menu {
+        right: 10%;
+    }
+    #hv-media-time-passed-text {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 723px) {
+    #hv-media-controls-settings-menu {
+        right: 20%;
+    }
+    #hv-media-time-passed-text {
+        font-size: 10px;
+    }
+}
