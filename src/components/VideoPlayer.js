@@ -20,14 +20,22 @@ class VideoPlayer extends Component {
             muted: false,
             pipOn: false,
             fullScreen: false,
-            volume: 100
+            volume: 100,
+            settingsMenuNum: 0,
+            contextMenuTop: 0,
+            contextMenuLeft: 0,
+            contextMenuVisible: false,
         }
 
         this.onOrientationChange = this.onOrientationChange.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
+        this.onContextMenu = this.onContextMenu.bind(this);
+        this.onContainerClick = this.onContainerClick.bind(this);
         this.togglePlayPause = this.togglePlayPause.bind(this);
         this.toggleMute = this.toggleMute.bind(this);
         this.onVolumeSliderChange = this.onVolumeSliderChange.bind(this);
+        this.toggleSettings = this.toggleSettings.bind(this);
+        // this.onSettingsOption = this.onSettingsOption.bind(this);
         this.togglePIP = this.togglePIP.bind(this);
         this.toggleFullScreen = this.toggleFullScreen.bind(this);
         this.onLoadedMetadata = this.onLoadedMetadata.bind(this);
@@ -74,6 +82,19 @@ class VideoPlayer extends Component {
         this.showControls();
     }
 
+    onContextMenu(event) {
+        event.preventDefault();
+        this.setState({ 
+            contextMenuLeft: event.pageX - this.refs.mediaPlayer.offsetLeft, 
+            contextMenuTop: event.pageY - this.refs.mediaPlayer.offsetTop, 
+            contextMenuVisible: true 
+        });
+    }
+
+    onContainerClick() {
+        this.setState({ contextMenuVisible: false });
+    }
+
     showControls() {
         this.setState({ showControls: true });
         try {
@@ -91,12 +112,14 @@ class VideoPlayer extends Component {
     }
 
     togglePlayPause() {
-        if(this.state.videoState === 'pause' || this.state.videoState === 'ended') {
-            this.setState({ videoState: 'play' });
-            this.refs.video.play();
-        } else {
-            this.setState({ videoState: 'pause' });
-            this.refs.video.pause();
+        if(!this.state.contextMenuVisible) {
+            if(this.state.videoState === 'pause' || this.state.videoState === 'ended') {
+                this.setState({ videoState: 'play' });
+                this.refs.video.play();
+            } else {
+                this.setState({ videoState: 'pause' });
+                this.refs.video.pause();
+            }
         }
         this.showControls();
     }
@@ -112,6 +135,23 @@ class VideoPlayer extends Component {
 
     onVolumeSliderChange(event) {
         this.setState({ volume: event.target.value });
+    }
+
+    toggleSettings() {
+        this.setState({ settingsMenuNum: 0 }); 
+    }
+
+    onSettingsOption(option, value) {
+        switch(this.state.settingsMenuNum) {
+            case 1://change playback
+                break;
+            case 2://change resolution
+                break;
+            case 3://add subtitles
+                break;
+            default:
+        }
+        this.setState({ settingsMenuNum: option });
     }
 
     async togglePIP() {
@@ -291,6 +331,45 @@ class VideoPlayer extends Component {
         }
     }
 
+    renderSettingsMenu() {
+        switch(this.state.settingsMenuNum) {
+            case 1:
+                return(
+                    <ul className='settings-menu-options'>
+                        <li className='settings-menu-option' onClick={this.onSettingsOption.bind(this, 0, 0.5)}>x0.5</li>
+                        <li className='settings-menu-option' onClick={this.onSettingsOption.bind(this, 0, 1)}>Normal</li>
+                        <li className='settings-menu-option' onClick={this.onSettingsOption.bind(this, 0, 1.5)}>x1.5</li> 
+                    </ul>
+                );
+            case 2:
+                return(
+                    <ul className='settings-menu-options'>
+                        <li className='settings-menu-option'>720p</li>
+                        <li className='settings-menu-option'>480p</li>
+                        <li className='settings-menu-option'>360p</li>
+                        <li className='settings-menu-option'>240p</li> 
+                        <li className='settings-menu-option'>144p</li>
+                    </ul>
+                );
+            case 3:
+                return(
+                    <ul className='settings-menu-options'>
+                        <li className='settings-menu-option'>None</li>
+                        <li className='settings-menu-option'>English</li>
+                        <li className='settings-menu-option'>Auto</li> 
+                    </ul>
+                );
+            default:
+                return(
+                    <ul className='settings-menu-options'>
+                        <li className='settings-menu-option' onClick={this.onSettingsOption.bind(this, 1)}>Playback Speed</li>
+                        {/* <li id='settings-menu-option'>Quality</li>
+                        <li id='settings-menu-option'>Subtitles</li> */}
+                    </ul>
+                );
+        }
+    }
+
     render() {
         const time = this.formatTime(this.state.videoTime);
         const duration = this.formatTime(this.state.videoDuration);
@@ -301,8 +380,8 @@ class VideoPlayer extends Component {
                 className='container' 
                 ref='mediaPlayer' 
                 style={this.props.style}
-                // onClick 
-                // onContextMenu
+                onClick={this.onContainerClick} 
+                onContextMenu={this.onContextMenu}
                 onMouseMove={this.onMouseMove}
                 // onTouchStart
             >
@@ -312,6 +391,7 @@ class VideoPlayer extends Component {
                 <video 
                     ref='video' 
                     preload='metadata'
+                    style={{ cursor: (this.state.showControls) ? 'pointer' : 'none' }}
                     poster={this.props.videoPoster} 
                     playsInline
                     className='video' 
@@ -347,6 +427,15 @@ class VideoPlayer extends Component {
                     <svg className='onscreen-control-icons'>
                         {this.renderIcon('onscreen')}
                     </svg>
+                </div>
+                <div 
+                    className={(this.state.contextMenuVisible) ? 'context-menu-container' : 'hidden'} 
+                    style={{ top: this.state.contextMenuTop + 'px', left: this.state.contextMenuLeft + 'px' }}
+                >
+                    <ul className='context-menu'>
+                        <li className='context-menu-option'>Keyboard Shortcuts</li>
+                        <li className='context-menu-option'>About</li>
+                    </ul>
                 </div>
                 <div className={(this.state.showControls) ? 'controls' : 'hidden'}>
                     <div className='top'>
@@ -404,12 +493,20 @@ class VideoPlayer extends Component {
                             </div>
                         </div>
                         <div className='right'>
-                            <button className='button'>
-                                <svg className='button-icon' disabled={this.state.videoState === 'ended'}>
+                            <button 
+                                className='button' 
+                                id='settings-button'
+                                onMouseLeave={this.toggleSettings}
+                                disabled={this.state.videoState === 'ended'}
+                            >
+                                <svg className='button-icon'>
                                     <use href='#settings'></use>
                                 </svg>
                             </button>
-                            <button className='button' onClick={this.togglePIP}  disabled={this.state.videoState === 'ended' || this.state.pipOn}>
+                            <div className='settings-menu' onMouseLeave={this.toggleSettings}>
+                                {this.renderSettingsMenu()}
+                            </div>
+                            <button className='button' onClick={this.togglePIP} disabled={this.state.videoState === 'ended' || this.state.pipOn}>
                                 <svg className='button-icon'>
                                     <use href='#pip'></use>
                                 </svg>

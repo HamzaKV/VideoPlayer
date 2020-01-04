@@ -304,3 +304,57 @@
     visibility: visible;
     opacity: 1;
 }
+
+.settings-menu {
+    width: 25%;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 40px;
+    right: 0px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s, visibility 1s linear;
+    padding: 0;
+}
+
+#settings-button:hover + .settings-menu,
+.settings-menu:hover {
+    visibility: visible;
+    opacity: 1;
+}
+
+.settings-menu-options {
+    list-style: none;
+    padding: 2px;
+}
+
+.settings-menu-option {
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.settings-menu-option:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.context-menu-container {
+    width: fit-content;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+}
+
+.context-menu {
+    list-style: none;
+    padding: 2px;
+}
+
+.context-menu-option {
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.context-menu-option:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
